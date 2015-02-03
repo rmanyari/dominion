@@ -1,16 +1,16 @@
 package ca.dominion.model.impl.cards;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ca.dominion.model.Action;
 import ca.dominion.model.Card;
 import ca.dominion.model.CardType;
 import ca.dominion.model.Stage;
+import ca.dominion.model.impl.DrawNewCardAction;
 import ca.dominion.model.impl.IncrementActionsAction;
-import ca.dominion.model.impl.IncrementBuysAction;
-import ca.dominion.model.impl.IncrementTreasureAction;
 
-public class Festival implements Card{
+public class Village implements Card{
 
 	@Override
 	public CardType getCardType() {
@@ -23,19 +23,16 @@ public class Festival implements Card{
 	}
 
 	@Override
-	public ArrayList<Action> playCard() {
+	public List<Action> playCard() {
 		ArrayList<Action> l = new ArrayList<Action>();
+		l.add(new DrawNewCardAction(1));
 		l.add(new IncrementActionsAction(2));
-		l.add(new IncrementBuysAction(1));
-		l.add(new IncrementTreasureAction(2));
 		return l;
 	}
 
 	@Override
 	public int getCost() {
-		return 5;
+		return 3;
 	}
-	
-	
 
 }
