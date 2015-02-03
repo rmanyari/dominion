@@ -33,4 +33,10 @@ public class Feast implements Card{
 		return 4;
 	}
 
+	@Override
+	public boolean isPlayable(List<Card> cards) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }
