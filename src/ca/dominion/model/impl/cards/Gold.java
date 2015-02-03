@@ -33,4 +33,7 @@ public class Gold implements Card{
 		return 6;
 	}
 
+	public boolean isPlayable(List<Card> cards){
+		return true;
+	}
 }

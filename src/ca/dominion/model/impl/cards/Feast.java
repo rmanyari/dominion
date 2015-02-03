@@ -33,4 +33,7 @@ public class Feast implements Card{
 		return 4;
 	}
 
+	public boolean isPlayable(List<Card> cards){
+		return true;
+	}
 }

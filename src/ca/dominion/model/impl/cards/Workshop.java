@@ -1,6 +1,7 @@
 package ca.dominion.model.impl.cards;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ca.dominion.model.Action;
 import ca.dominion.model.Card;
@@ -32,4 +33,7 @@ public class Workshop implements Card{
 		return 3;
 	}
 
+	public boolean isPlayable(List<Card> cards){
+		return true;
+	}
 }

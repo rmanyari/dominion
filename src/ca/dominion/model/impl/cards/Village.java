@@ -35,4 +35,7 @@ public class Village implements Card{
 		return 3;
 	}
 
+	public boolean isPlayable(List<Card> cards){
+		return true;
+	}
 }
