@@ -1,7 +1,5 @@
 package ca.dominion.model;
 
-public enum GameActions {
-
+public enum Stage {
 	BUY, ACTION, REACTION;
-	
 }

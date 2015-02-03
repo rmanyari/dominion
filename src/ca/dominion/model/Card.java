@@ -1,8 +1,12 @@
 package ca.dominion.model;
 
+import java.util.List;
+
 public interface Card {
 
-	
-	public int cost();
+	public CardType getCardType();
+	public Stage getStage();
+	public List<Action> playCard();
+	public int getCost();
 	
 }
