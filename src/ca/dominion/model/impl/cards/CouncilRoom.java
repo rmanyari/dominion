@@ -35,4 +35,10 @@ public class CouncilRoom implements Card{
 		return 5;
 	}
 
+	@Override
+	public boolean isPlayable(List<Card> cards) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
