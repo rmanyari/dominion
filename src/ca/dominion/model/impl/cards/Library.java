@@ -33,4 +33,7 @@ public class Library implements Card{
 		return 5;
 	}
 
+	public boolean isPlayable(List<Card> cards){
+		return true;
+	}
 }

@@ -7,6 +7,9 @@ import java.util.Observer;
 import java.util.UUID;
 
 import ca.dominion.exceptions.NotEnoughTreasureException;
+import java.util.Random;
+
+import javax.xml.ws.Action;
 
 public class Player implements Observer{
 
@@ -17,9 +20,11 @@ public class Player implements Observer{
 	private int availableTreasure = 0;
 	private String id;
 	private Stage currentStage;
+	private randomGenerator;
 	
 	public Player(){
 		id = UUID.randomUUID().toString();
+		randomGenerator = new Random();
 	}
 	
 	public void useTreasure(int amount) throws NotEnoughTreasureException{
@@ -50,14 +55,41 @@ public class Player implements Observer{
 		return id;
 	}
 	
+	public drawCard() {
+		Card c = drawPile.pop();
+		//TODO
+	}
 	public List<Card> getAllowedActions(){
 		List<Card> allowed = new ArrayList<>();
 		for (Card card : hand) {
 			if(card.getStage() == currentStage){
+				if (card.isPlayable(hand)) allowed.add(card);
 				
 			}
 		}
-		return null;
+		return allowed;
+	}
+	
+	public void getRandomCard(ArrayList cards) {
+		int index = randomGenerator.nextInt(cards.size());
+		return cards.get(index);
+	}
+	
+	public void playActions() {
+		List<Card> allowed = getAllowedActions();
+		while (allowed.size()!=0) {
+			Card card = getRandomCard(allowed);
+			ArrayList<Action> actions = card.playCard();
+			for (Action a: actions) {
+				switch a.getClass().getName():
+					case "DrawNewCardAction":
+						drawCard();
+					default:
+						
+			}
+			
+			allowed = getAllowedActions;
+		}
 	}
 	
 	@Override
@@ -74,6 +106,7 @@ public class Player implements Observer{
 			if(parts[0].equals(Stage.ACTION.name())){
 				
 				// Action
+				playActions();
 				
 			}else{
 				
