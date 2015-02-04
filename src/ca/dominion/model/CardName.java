@@ -1,0 +1,5 @@
+package ca.dominion.model;
+
+public enum CardName {
+	NONE, COPPER, SILVER, GOLD, VILLAGE, SMITHY, WORKSHOP, MARKET, FESTIVAL, FEAST, COUNCILROOM, LIBRARY,ESTATE;
+}

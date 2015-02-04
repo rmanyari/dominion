@@ -1,6 +1,7 @@
 package ca.dominion.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -9,23 +10,40 @@ import java.util.UUID;
 import ca.dominion.exceptions.NotEnoughTreasureException;
 import java.util.Random;
 
+import ca.dominion.model.impl.GameDeck;
+import ca.dominion.model.impl.Pile;
+import ca.dominion.model.impl.cards.*;
+
 public class Player implements Observer{
 
-	ArrayList<Card> drawPile = new ArrayList<Card>();
-	ArrayList<Card> discardPile = new ArrayList<Card>();
-	ArrayList<Card> hand = new ArrayList<Card>();
+	private Pile drawPile;
+	private Pile discardPile;
+	private Hand hand;
 	
 	private int availableTreasure = 0;
 	private String id;
 	private Stage currentStage;
 	private Random randomGenerator = new Random();
+	private GameDeck gameDeck;
 	
-	public Player(){
+	public Player(GameDeck gameDeck) {
+		this.gameDeck = gameDeck;
+		drawPile = new Pile(CardName.NONE);
+		discardPile = new Pile(CardName.NONE);
+		
 		id = UUID.randomUUID().toString();
 		randomGenerator = new Random();
+		
+		ArrayList<Card> handCards = new ArrayList<Card>();
+		for (int i = 0; i<7; i++) handCards.add(new Copper(CardName.COPPER));
+		for (int i = 0; i<3; i++) handCards.add(new Estate(CardName.ESTATE));
+		shuffleCards(handCards);
+		this.hand = new Hand(handCards);
+		
+		
 	}
 	
-	public void useTreasure(int amount) throws NotEnoughTreasureException{
+	public void useTreasure(int amount) throws NotEnoughTreasureException {
 		if(amount >= availableTreasure)
 			availableTreasure -= amount;
 		else
@@ -41,11 +59,6 @@ public class Player implements Observer{
 	}
 	
 	public int getVictoryPoints(){
-		for (Card card : drawPile) {
-			if(card.getCardType() == CardType.VICTORY){
-				//TODO	
-			}
-		}
 		return 0;
 	}
 
@@ -54,29 +67,23 @@ public class Player implements Observer{
 	}
 	
 	public void drawCard() {
-		Card c = drawPile.get(drawPile.size()-1);
-		drawPile.remove(drawPile.size()-1);
-		hand.add(c);
+		Card c = drawPile.drawCard();
+		drawPile.removeCard(c);
+		hand.addCard(c);
 	}
 	
-	public List<Card> getAllowedActions(){
-		List<Card> allowed = new ArrayList<>();
-		for (Card card : hand) {
-			if(card.getStage() == currentStage){
-				if (card.isPlayable(hand)) allowed.add(card);
-				
-			}
-		}
-		return allowed;
+	public void shuffleCards(List<Card> cards) {
+		Collections.shuffle(cards);
 	}
-	
+
 	public Card getRandomCard(List<Card> cards) {
+		if (cards.size() == 0) return null;
 		int index = randomGenerator.nextInt(cards.size());
 		return (Card) cards.get(index);
 	}
 	
-	public void playActions() {
-		List<Card> allowed = getAllowedActions();
+	public void playActionPhase() {
+		List<Card> allowed = hand.getAllowedActions();
 		while (allowed.size()!=0) {
 			Card card = getRandomCard(allowed);
 			List<Action> actions = card.playCard();
@@ -84,14 +91,40 @@ public class Player implements Observer{
 				switch (a.getClass().getName()){
 					case "DrawNewCardAction":
 						drawCard();
+						System.out.print("draw action");
 					default:
 						
 				}
 						
 			}
 			
-			allowed = getAllowedActions();
+			allowed = hand.getAllowedActions();
 		}
+	}
+	
+	public List<Card> getCardsAbleToBuy() {
+		ArrayList<Card> avCardsToBuy = (ArrayList<Card>) gameDeck.getAvailableCards();
+		
+		for (Card c: avCardsToBuy) {
+			if (c.getCost()>getAvailableTreasure()) avCardsToBuy.remove(c);
+		}
+		return avCardsToBuy;
+	}
+	
+	public void playBuyPhase() {
+		int treasure = getAvailableTreasure();
+		ArrayList<Card> avCardsToBuy = (ArrayList<Card>) getCardsAbleToBuy();
+		Card c = getRandomCard(avCardsToBuy);
+		if (c != null) {
+			buyCard(c);
+		}
+		
+	}
+	
+	private void buyCard(Card card) {
+		Card bCard = gameDeck.buyCard(card);
+		discardPile.addCard(bCard);
+		
 	}
 	
 	@Override
@@ -108,12 +141,12 @@ public class Player implements Observer{
 			if(parts[0].equals(Stage.ACTION.name())){
 				
 				// Action
-				playActions();
+				playActionPhase();
 				
 			}else{
 				
 				// Buy
-				
+				playBuyPhase();
 			}
 		}
 	}

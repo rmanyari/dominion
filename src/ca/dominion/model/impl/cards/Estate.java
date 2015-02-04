@@ -5,49 +5,47 @@ import java.util.List;
 
 import ca.dominion.model.Action;
 import ca.dominion.model.Card;
+import ca.dominion.model.CardName;
 import ca.dominion.model.CardType;
 import ca.dominion.model.Hand;
 import ca.dominion.model.Stage;
 import ca.dominion.model.impl.IncrementTreasureAction;
 
-import ca.dominion.model.CardName;
-
-
-public class Copper implements Card{
+public class Estate implements Card{
 
 	private CardName name;
 	
-	public Copper (CardName name) {
+	public Estate (CardName name) {
 		this.name = name;
 	}
 	
 	@Override
+	public CardName getName() {
+		return name;
+	}
+	
+	
+	@Override
 	public CardType getCardType() {
-		return CardType.TREASURE;
+		return CardType.VICTORY;
 	}
 
 	@Override
 	public Stage getStage() {
-		return Stage.BUY;
+		return Stage.NONE;
 	}
 
-	public boolean isPlayable(Hand hand){
-		return true;
-	}
 	@Override
 	public List<Action> playCard() {
-		ArrayList<Action> l = new ArrayList<Action>();
-		return l;
+		return null;
 	}
 
 	@Override
 	public int getCost() {
-		return 0;
+		return 2;
 	}
-
-	@Override
-	public CardName getName() {
-		return name;
+	
+	public boolean isPlayable(Hand hand){
+		return true;
 	}
-
 }
