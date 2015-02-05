@@ -8,7 +8,6 @@ import ca.dominion.model.impl.cards.*;
 
 public class Application {
 
-	
 	public static void main(String[] args) {
 		
 		System.out.println("test");
@@ -17,7 +16,7 @@ public class Application {
 		ArrayList<Card> actionCards = new ArrayList<Card>();
 		actionCards.add(new Village(CardName.VILLAGE));
 		actionCards.add(new Smithy(CardName.SMITHY));	
-		
+		 
 		GameDeck gameDeck = new GameDeck(actionCards);
 	 
 		Player player1 = new Player(gameDeck);

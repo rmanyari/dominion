@@ -8,8 +8,8 @@ import ca.dominion.model.impl.*;
 
 public class Game extends Observable{
 	
-	private ArrayList<Player> players;
-	private int turn = 0;
+	private ArrayList<Player> players = new ArrayList<Player>();
+	private int turn = 1;
 	private GameDeck deck;
 	
 	public Game(GameDeck deck, List<Player> players){
@@ -22,11 +22,19 @@ public class Game extends Observable{
 		
 	public void playTurn(Stage stage){
 		setChanged();
-		String message = stage.name() + players.get(players.size() % turn).getId();
+		String message = stage.name() + "_" + players.get(players.size()-1).getId(); //removed %turn so just 1 person is playing
+		System.out.println(message);
+
 		if(stage == Stage.BUY){
 			turn++;
 		}
 		notifyObservers(message);
+		
+		//only play 30 moves
+		if (turn < 30) {
+			Stage nextStage = (stage == Stage.ACTION) ? Stage.BUY: Stage.ACTION;
+			playTurn(nextStage);
+		}
 	}
 	
 }

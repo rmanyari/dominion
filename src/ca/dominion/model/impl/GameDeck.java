@@ -12,7 +12,6 @@ public class GameDeck {
 	private ArrayList<Card> cardsInDeck = new ArrayList<Card>();
 
 	public GameDeck (List<Card> actionCards) {
-
 		//add Treasure Piles
 		Pile copperPile = new Pile(new Copper(CardName.COPPER), 45);
 		Pile silverPile = new Pile(new Silver(CardName.SILVER), 30);
@@ -25,8 +24,13 @@ public class GameDeck {
 		cardsPiles.add(estatePile);
 
 		cardsInDeck = (ArrayList<Card>) actionCards;
+		cardsInDeck.addAll(actionCards);
+		cardsInDeck.add(new Copper(CardName.COPPER));
+		cardsInDeck.add(new Silver(CardName.SILVER));
+		cardsInDeck.add(new Gold(CardName.GOLD));
+		cardsInDeck.add(new Estate(CardName.ESTATE));
+
 		for (Card c: actionCards) {
-			cardsInDeck.add(c);
 			Pile aPile = new Pile(c, 25);
 			cardsPiles.add(aPile);
 		}

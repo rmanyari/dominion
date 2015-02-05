@@ -14,13 +14,16 @@ import ca.dominion.model.impl.GameDeck;
 import ca.dominion.model.impl.Pile;
 import ca.dominion.model.impl.cards.*;
 
-public class Player implements Observer{
+public class Player implements Observer {
 
 	private Pile drawPile;
 	private Pile discardPile;
 	private Hand hand;
 	
-	private int availableTreasure = 0;
+	private int availableTreasure;
+	private int availableBuys;
+	private int availableActions;
+
 	private String id;
 	private Stage currentStage;
 	private Random randomGenerator = new Random();
@@ -40,14 +43,14 @@ public class Player implements Observer{
 		shuffleCards(handCards);
 		this.hand = new Hand(handCards);
 		
+		resetAbilities();
 		
 	}
 	
-	public void useTreasure(int amount) throws NotEnoughTreasureException {
-		if(amount >= availableTreasure)
-			availableTreasure -= amount;
-		else
-			throw new NotEnoughTreasureException();
+	private void resetAbilities() {
+		availableActions = 1;
+		availableBuys = 1;
+		availableTreasure = 5;
 	}
 	
 	public void addTreasure(int amount){
@@ -70,6 +73,9 @@ public class Player implements Observer{
 		Card c = drawPile.drawCard();
 		drawPile.removeCard(c);
 		hand.addCard(c);
+		
+		System.out.println("drew card");
+
 	}
 	
 	public void shuffleCards(List<Card> cards) {
@@ -77,7 +83,6 @@ public class Player implements Observer{
 	}
 
 	public Card getRandomCard(List<Card> cards) {
-		if (cards.size() == 0) return null;
 		int index = randomGenerator.nextInt(cards.size());
 		return (Card) cards.get(index);
 	}
@@ -91,7 +96,6 @@ public class Player implements Observer{
 				switch (a.getClass().getName()){
 					case "DrawNewCardAction":
 						drawCard();
-						System.out.print("draw action");
 					default:
 						
 				}
@@ -100,51 +104,70 @@ public class Player implements Observer{
 			
 			allowed = hand.getAllowedActions();
 		}
+		
+		endActionPhase();
+	}
+	
+	public void endActionPhase() {
+		
+	}
+	public void discardHand() {
+		
 	}
 	
 	public List<Card> getCardsAbleToBuy() {
-		ArrayList<Card> avCardsToBuy = (ArrayList<Card>) gameDeck.getAvailableCards();
-		
-		for (Card c: avCardsToBuy) {
-			if (c.getCost()>getAvailableTreasure()) avCardsToBuy.remove(c);
+		ArrayList<Card> allCardstoBuy = (ArrayList<Card>) gameDeck.getAvailableCards();
+		System.out.println(allCardstoBuy.size());
+
+		ArrayList<Card> avCardsToBuy = new ArrayList<Card>();
+
+		for (Card c: allCardstoBuy) {
+			if (c.getCost()<getAvailableTreasure()) avCardsToBuy.add(c);
 		}
 		return avCardsToBuy;
 	}
 	
+	//we buy as many cards as possible randomly choosing one each time
 	public void playBuyPhase() {
-		int treasure = getAvailableTreasure();
-		ArrayList<Card> avCardsToBuy = (ArrayList<Card>) getCardsAbleToBuy();
-		Card c = getRandomCard(avCardsToBuy);
-		if (c != null) {
-			buyCard(c);
-		}
 		
+		ArrayList<Card> avCardsToBuy = (ArrayList<Card>) getCardsAbleToBuy();
+		System.out.println("in buy phase, av cards: " + avCardsToBuy.size());
+
+		while(availableBuys>0 && avCardsToBuy.size()>0) {
+			Card c = getRandomCard(avCardsToBuy);
+			buyCard(c);
+			avCardsToBuy = (ArrayList<Card>) getCardsAbleToBuy();
+		}
 	}
 	
 	private void buyCard(Card card) {
 		Card bCard = gameDeck.buyCard(card);
 		discardPile.addCard(bCard);
-		
+		availableTreasure -= card.getCost();
+		availableBuys -=1;
+		System.out.println("bought Card: " + card.getName().toString() + ", remaining treasure: " + availableTreasure);
+
 	}
 	
 	@Override
 	public void update(Observable o, Object turn) {
 		String message = (String)turn;
-		String[] parts = message.split("-");
+		String[] parts = message.split("_");
+
 		currentStage = Stage.valueOf(parts[0]);
-		
+
 		if(parts[0].equals(Stage.REACTION.name())){
 			
 			// Ignore ID and do wtv
 			
+			
 		}else if(parts[1].equals(id)){
 			if(parts[0].equals(Stage.ACTION.name())){
-				
 				// Action
+				resetAbilities();
 				playActionPhase();
 				
 			}else{
-				
 				// Buy
 				playBuyPhase();
 			}

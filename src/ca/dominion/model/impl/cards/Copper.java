@@ -8,12 +8,11 @@ import ca.dominion.model.Card;
 import ca.dominion.model.CardType;
 import ca.dominion.model.Hand;
 import ca.dominion.model.Stage;
-import ca.dominion.model.impl.IncrementTreasureAction;
 
 import ca.dominion.model.CardName;
 
 
-public class Copper implements Card{
+public class Copper implements Card {
 
 	private CardName name;
 	
