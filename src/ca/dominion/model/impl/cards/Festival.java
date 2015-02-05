@@ -36,8 +36,9 @@ public class Festival implements Card{
 	public int getCost() {
 		return 5;
 	}
-	
-	public boolean isPlayable(List<Card> cards){
+
+	@Override
+	public boolean isPlayable(List<Card> cards) {
 		return true;
 	}
 

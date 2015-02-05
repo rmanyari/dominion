@@ -37,8 +37,7 @@ public class CouncilRoom implements Card{
 
 	@Override
 	public boolean isPlayable(List<Card> cards) {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }
