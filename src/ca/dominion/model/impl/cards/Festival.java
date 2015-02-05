@@ -16,7 +16,8 @@ import ca.dominion.model.impl.IncrementTreasureAction;
 public class Festival implements Card{
 
 	private CardName name;
-	
+	private int value = 0;
+
 	public Festival(CardName name) {
 		this.name = name;
 	}
@@ -52,5 +53,10 @@ public class Festival implements Card{
 	
 	public boolean isPlayable(Hand hand){
 		return true;
+	}
+
+	@Override
+	public int getValue() {
+		return value;
 	}
 }

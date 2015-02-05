@@ -15,6 +15,7 @@ import ca.dominion.model.CardName;
 public class Copper implements Card {
 
 	private CardName name;
+	private int value = 1;
 	
 	public Copper (CardName name) {
 		this.name = name;
@@ -33,10 +34,10 @@ public class Copper implements Card {
 	public boolean isPlayable(Hand hand){
 		return true;
 	}
+	
 	@Override
 	public List<Action> playCard() {
-		ArrayList<Action> l = new ArrayList<Action>();
-		return l;
+		return null;
 	}
 
 	@Override
@@ -48,5 +49,9 @@ public class Copper implements Card {
 	public CardName getName() {
 		return name;
 	}
-
+	
+	@Override
+	public int getValue() {
+		return value;
+	}
 }

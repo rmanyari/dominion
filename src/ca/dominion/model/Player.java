@@ -37,11 +37,13 @@ public class Player implements Observer {
 		id = UUID.randomUUID().toString();
 		randomGenerator = new Random();
 		
-		ArrayList<Card> handCards = new ArrayList<Card>();
-		for (int i = 0; i<7; i++) handCards.add(new Copper(CardName.COPPER));
-		for (int i = 0; i<3; i++) handCards.add(new Estate(CardName.ESTATE));
-		shuffleCards(handCards);
-		this.hand = new Hand(handCards);
+		ArrayList<Card> startingCards = new ArrayList<Card>();
+		for (int i = 0; i<7; i++) startingCards.add(new Copper(CardName.COPPER));
+		for (int i = 0; i<3; i++) startingCards.add(new Estate(CardName.ESTATE));
+		shuffleCards(startingCards);
+		this.drawPile = new Pile(CardName.NONE, startingCards);
+		
+		this.hand = new Hand();
 		
 		resetAbilities();
 		
@@ -72,9 +74,17 @@ public class Player implements Observer {
 	public void drawCard() {
 		Card c = drawPile.drawCard();
 		drawPile.removeCard(c);
-		hand.addCard(c);
-		
+		hand.draw(c);
 		System.out.println("drew card");
+	}
+	
+	public void drawCard(int num) {
+		for (int i = 0; i<num; i++) {
+			Card c = drawPile.drawCard();
+			drawPile.removeCard(c);
+			hand.draw(c);
+		}
+		System.out.println("drew "+ num + " cards");
 
 	}
 	
@@ -111,6 +121,7 @@ public class Player implements Observer {
 	public void endActionPhase() {
 		
 	}
+	
 	public void discardHand() {
 		
 	}
@@ -130,6 +141,8 @@ public class Player implements Observer {
 	//we buy as many cards as possible randomly choosing one each time
 	public void playBuyPhase() {
 		
+		cashInTreasure();
+		
 		ArrayList<Card> avCardsToBuy = (ArrayList<Card>) getCardsAbleToBuy();
 		System.out.println("in buy phase, av cards: " + avCardsToBuy.size());
 
@@ -138,6 +151,21 @@ public class Player implements Observer {
 			buyCard(c);
 			avCardsToBuy = (ArrayList<Card>) getCardsAbleToBuy();
 		}
+		
+		endBuyPhase();
+	}
+	public void endBuyPhase() {
+
+	}
+	
+	private void cashInTreasure() {
+		availableTreasure = hand.getTotalTreausure();
+		List<Card> treasureCards = hand.getTreausureCards();
+		for (Card c: treasureCards) {
+			hand.discard(c);
+			discardPile.addCard(c);
+		}
+		
 	}
 	
 	private void buyCard(Card card) {
@@ -165,12 +193,14 @@ public class Player implements Observer {
 			if(parts[0].equals(Stage.ACTION.name())){
 				// Action
 				resetAbilities();
+				drawCard(5);
 				playActionPhase();
 				
 			}else{
 				// Buy
 				playBuyPhase();
 			}
+			
 		}
 	}
 	

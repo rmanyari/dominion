@@ -12,10 +12,11 @@ import ca.dominion.model.Stage;
 import ca.dominion.model.impl.DrawNewCardAction;
 import ca.dominion.model.impl.IncrementBuysAction;
 
-public class CouncilRoom implements Card{
+public class CouncilRoom implements Card {
 
 	private CardName name;
-	
+	private int value = 0;
+
 	public CouncilRoom (CardName name) {
 		this.name = name;
 	}
@@ -50,5 +51,10 @@ public class CouncilRoom implements Card{
 
 	public boolean isPlayable(Hand hand){
 		return true;
+	}
+
+	@Override
+	public int getValue() {
+		return value;
 	}
 }

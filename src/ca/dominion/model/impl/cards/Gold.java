@@ -14,7 +14,8 @@ import ca.dominion.model.impl.IncrementTreasureAction;
 public class Gold implements Card {
 
 	private CardName name;
-	
+	private int value = 3;
+
 	public Gold(CardName name) {
 		this.name = name;
 	}
@@ -48,5 +49,10 @@ public class Gold implements Card {
 
 	public boolean isPlayable(Hand hand){
 		return true;
+	}
+
+	@Override
+	public int getValue() {
+		return value;
 	}
 }

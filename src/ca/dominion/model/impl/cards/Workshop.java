@@ -14,7 +14,8 @@ import ca.dominion.model.impl.GainNewCardAction;
 public class Workshop implements Card{
 
 	private CardName name;
-	
+	private int value = 0;
+
 	public Workshop(CardName name) {
 		this.name = name;
 	}
@@ -48,5 +49,10 @@ public class Workshop implements Card{
 
 	public boolean isPlayable(Hand hand){
 		return true;
+	}
+
+	@Override
+	public int getValue() {
+		return value;
 	}
 }

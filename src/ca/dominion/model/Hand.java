@@ -7,16 +7,20 @@ public class Hand {
 
 	private ArrayList<Card> cards = new ArrayList<Card>();
 
+	public Hand() {
+		
+	}
+	
 	public Hand(List<Card> cards) {
 		this.cards = (ArrayList<Card>) cards;
 		
 	}
 	
-	public void addCard(Card c) {
+	public void draw(Card c) {
 		cards.add(c);
 	}
 	
-	public void removeCard(Card c) {
+	public void discard(Card c) {
 		cards.remove(c);
 	}
 	
@@ -31,5 +35,23 @@ public class Hand {
 		return allowed;
 	}
 	
+	public int getTotalTreausure() {
+		int treasure = 0;
+		for (Card c : cards) {
+			if(c.getStage() == Stage.BUY){
+				treasure += c.getValue();
+			}
+		}
+		return treasure;
+	}
 	
+	public List<Card> getTreausureCards() {
+		List<Card> treausureCards = new ArrayList<>();
+		for (Card c : cards) {
+			if(c.getStage() == Stage.BUY){
+				treausureCards.add(c);
+			}
+		}
+		return treausureCards;
+	}
 }
