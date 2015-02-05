@@ -1,6 +1,5 @@
 package ca.dominion.model.impl.cards;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ca.dominion.model.Action;
@@ -9,15 +8,12 @@ import ca.dominion.model.CardName;
 import ca.dominion.model.CardType;
 import ca.dominion.model.Hand;
 import ca.dominion.model.Stage;
-import ca.dominion.model.impl.IncrementActionsAction;
-import ca.dominion.model.impl.IncrementBuysAction;
-import ca.dominion.model.impl.IncrementTreasureAction;
 
-public class Market implements Card{
+public class Estate implements Card{
 
 	private CardName name;
 	
-	public Market(CardName name) {
+	public Estate (CardName name) {
 		this.name = name;
 	}
 	
@@ -26,30 +22,27 @@ public class Market implements Card{
 		return name;
 	}
 	
+	
 	@Override
 	public CardType getCardType() {
-		return CardType.ACTION;
+		return CardType.VICTORY;
 	}
 
 	@Override
 	public Stage getStage() {
-		return Stage.ACTION;
+		return Stage.NONE;
 	}
 
 	@Override
 	public List<Action> playCard() {
-		ArrayList<Action> l = new ArrayList<Action>();
-		l.add(new IncrementBuysAction(1));
-		l.add(new IncrementActionsAction(1));
-		l.add(new IncrementTreasureAction(1));
-		return l;
+		return null;
 	}
 
 	@Override
 	public int getCost() {
-		return 5;
+		return 2;
 	}
-
+	
 	public boolean isPlayable(Hand hand){
 		return true;
 	}

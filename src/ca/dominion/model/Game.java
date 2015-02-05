@@ -2,27 +2,47 @@ package ca.dominion.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 
-public class Game extends Observable{
+import ca.dominion.model.impl.*;
+
+public class Game{
 	
-	private ArrayList<Player> players;
+	private List<Player> players = new ArrayList<Player>();
 	private int turn = 0;
+	protected GameDeck deck;
+	protected Stage stage;
 	
-	public Game(List<Player> players){
+	public Game(GameDeck deck, List<Player> players){
 		this.players.addAll(players);
-		for (Player player : players) {
-			addObserver(player);
-		}
+		this.deck = deck;
 	}
 		
-	public void playTurn(Stage stage){
-		setChanged();
-		String message = stage.name() + players.get(players.size() % turn).getId();
-		if(stage == Stage.BUY){
-			turn++;
+	public void playTurn(){
+		Player p = players.get(players.size() % 1);
+		boolean isDoneActionStage = false;
+		boolean isDoneBuyStage = false;
+		boolean firstActionStage = true;
+		boolean firstBuyStage = true;
+		
+		while(!isDoneActionStage){
+			System.out.println("Playing action");
+			List<Action> actions = p.play(Stage.ACTION, firstActionStage);
+			actionOnOtherPlayers(p.getId(), actions);
+			firstActionStage = false;
+			isDoneActionStage = p.isDoneWithStage(Stage.ACTION);
 		}
-		notifyObservers(message);
+		
+		while(!isDoneBuyStage){
+			System.out.println("Playing buy");
+			p.play(Stage.BUY, firstBuyStage);
+			firstBuyStage = false;
+			isDoneBuyStage = p.isDoneWithStage(Stage.BUY);
+		}
+		
+	}
+	
+	private void actionOnOtherPlayers(String uuid, List<Action> actions){
+		
 	}
 	
 }
