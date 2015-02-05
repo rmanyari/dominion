@@ -47,4 +47,10 @@ public class Pile {
 	public CardName getPileType() {
 		return pileType;
 	}
+	
+	public List<Card> getCards() {
+		return cards;
+	}
+	
+	
 }

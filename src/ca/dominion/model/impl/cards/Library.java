@@ -14,7 +14,8 @@ import ca.dominion.model.impl.DrawUntilAction;
 public class Library implements Card{
 
 	private CardName name;
-	
+	private int value = 0;
+
 	public Library(CardName name) {
 		this.name = name;
 	}
@@ -48,5 +49,10 @@ public class Library implements Card{
 
 	public boolean isPlayable(Hand hand){
 		return true;
+	}
+
+	@Override
+	public int getValue() {
+		return value;
 	}
 }

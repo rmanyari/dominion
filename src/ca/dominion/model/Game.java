@@ -8,17 +8,17 @@ import ca.dominion.model.impl.*;
 public class Game{
 	
 	private List<Player> players = new ArrayList<Player>();
-	private int turn = 0;
 	protected GameDeck deck;
 	protected Stage stage;
-	
+	private int turn = 1;
+		
 	public Game(GameDeck deck, List<Player> players){
 		this.players.addAll(players);
 		this.deck = deck;
 	}
 		
 	public void playTurn(){
-		Player p = players.get(players.size() % 1);
+		Player p = players.get(players.size() % turn);
 		boolean isDoneActionStage = false;
 		boolean isDoneBuyStage = false;
 		boolean firstActionStage = true;
@@ -39,10 +39,11 @@ public class Game{
 			isDoneBuyStage = p.isDoneWithStage(Stage.BUY);
 		}
 		
+		turn++;
+		
 	}
 	
 	private void actionOnOtherPlayers(String uuid, List<Action> actions){
 		
 	}
-	
 }

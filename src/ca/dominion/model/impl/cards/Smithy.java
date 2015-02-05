@@ -13,7 +13,8 @@ import ca.dominion.model.impl.DrawNewCardAction;
 public class Smithy implements Card{
 
 	private CardName name;
-	
+	private int value = 0;
+
 	public Smithy(CardName name) {
 		this.name = name;
 	}
@@ -47,5 +48,10 @@ public class Smithy implements Card{
 	
 	public boolean isPlayable(Hand hand){
 		return true;
+	}
+
+	@Override
+	public int getValue() {
+		return value;
 	}
 }

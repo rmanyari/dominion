@@ -14,7 +14,8 @@ import ca.dominion.model.impl.TrashYourselfAction;
 public class Feast implements Card{
 
 	private CardName name;
-	
+	private int value = 0;
+
 	public Feast (CardName name) {
 		this.name = name;
 	}
@@ -50,6 +51,11 @@ public class Feast implements Card{
 	@Override
 	public boolean isPlayable(Hand hand){
 		return true;
+	}
+
+	@Override
+	public int getValue() {
+		return value;
 	}
 
 }

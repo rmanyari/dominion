@@ -3,7 +3,6 @@ package ca.dominion.model;
 import java.util.*;
 import ca.dominion.model.impl.*;
 import ca.dominion.model.impl.cards.*;
-import ca.dominion.exceptions.NotEnoughTreasureException;
 
 public class Player{
 
@@ -14,6 +13,7 @@ public class Player{
 	private int availableTreasure = 0;
 	private int availableActions = 1;
 	private int availableBuys = 1;
+
 	private String id;
 	private Random randomGenerator = new Random();
 	private GameDeck gameDeck;
@@ -26,20 +26,22 @@ public class Player{
 		id = UUID.randomUUID().toString();
 		randomGenerator = new Random();
 		
-		ArrayList<Card> handCards = new ArrayList<Card>();
-		for (int i = 0; i<7; i++) handCards.add(new Copper(CardName.COPPER));
-		for (int i = 0; i<3; i++) handCards.add(new Estate(CardName.ESTATE));
-		shuffleCards(handCards);
-		this.hand = new Hand(handCards);
+		ArrayList<Card> startingCards = new ArrayList<Card>();
+		for (int i = 0; i<7; i++) startingCards.add(new Copper(CardName.COPPER));
+		for (int i = 0; i<3; i++) startingCards.add(new Estate(CardName.ESTATE));
+		shuffleCards(startingCards);
+		this.drawPile = new Pile(CardName.NONE, startingCards);
 		
+		this.hand = new Hand();
+		
+		resetAbilities();
 		
 	}
 	
-	public void useTreasure(int amount) throws NotEnoughTreasureException {
-		if(amount >= availableTreasure)
-			availableTreasure -= amount;
-		else
-			throw new NotEnoughTreasureException();
+	private void resetAbilities() {
+		availableActions = 1;
+		availableBuys = 1;
+		availableTreasure = 5;
 	}
 	
 	public void addTreasure(int amount){
@@ -57,7 +59,18 @@ public class Player{
 	public void drawCard() {
 		Card c = drawPile.drawCard();
 		drawPile.removeCard(c);
-		hand.addCard(c);
+		hand.draw(c);
+		System.out.println("drew card");
+	}
+	
+	public void drawCard(int num) {
+		for (int i = 0; i<num; i++) {
+			Card c = drawPile.drawCard();
+			drawPile.removeCard(c);
+			hand.draw(c);
+		}
+		System.out.println("drew "+ num + " cards");
+
 	}
 	
 	public void shuffleCards(List<Card> cards) {
@@ -65,7 +78,6 @@ public class Player{
 	}
 
 	public Card getRandomCard(List<Card> cards) {
-		if (cards.size() == 0) return null;
 		int index = randomGenerator.nextInt(cards.size());
 		return (Card) cards.get(index);
 	}
@@ -79,7 +91,6 @@ public class Player{
 				switch (a.getClass().getName()){
 					case "DrawNewCardAction":
 						drawCard();
-						System.out.print("draw action");
 					default:
 						
 				}
@@ -88,23 +99,56 @@ public class Player{
 			
 			allowed = hand.getAllowedActions();
 		}
+		
+		endActionPhase();
+	}
+	
+	public void endActionPhase() {
+		
+	}
+	
+	public void discardHand() {
+		
 	}
 	
 	public List<Card> getCardsAbleToBuy() {
-		ArrayList<Card> avCardsToBuy = (ArrayList<Card>) gameDeck.getAvailableCards();
-		
-		for (Card c: avCardsToBuy) {
-			if (c.getCost()>availableTreasure) avCardsToBuy.remove(c);
+		ArrayList<Card> allCardstoBuy = (ArrayList<Card>) gameDeck.getAvailableCards();
+		System.out.println(allCardstoBuy.size());
+
+		ArrayList<Card> avCardsToBuy = new ArrayList<Card>();
+
+		for (Card c: allCardstoBuy) {
+			if (c.getCost()<availableTreasure) avCardsToBuy.add(c);
 		}
 		return avCardsToBuy;
 	}
 	
+	//we buy as many cards as possible randomly choosing one each time
 	public void playBuyPhase() {
+		cashInTreasure();
+		
 		ArrayList<Card> avCardsToBuy = (ArrayList<Card>) getCardsAbleToBuy();
-		Card c = getRandomCard(avCardsToBuy);
-		if (c != null) {
+		System.out.println("in buy phase, av cards: " + avCardsToBuy.size());
+
+		while(availableBuys>0 && avCardsToBuy.size()>0) {
+			Card c = getRandomCard(avCardsToBuy);
 			buyCard(c);
 			availableTreasure -= c.getCost();
+			avCardsToBuy = (ArrayList<Card>) getCardsAbleToBuy();
+		}
+		
+		endBuyPhase();
+	}
+	public void endBuyPhase() {
+
+	}
+	
+	private void cashInTreasure() {
+		availableTreasure = hand.getTotalTreausure();
+		List<Card> treasureCards = hand.getTreausureCards();
+		for (Card c: treasureCards) {
+			hand.discard(c);
+			discardPile.addCard(c);
 		}
 		
 	}
@@ -112,7 +156,10 @@ public class Player{
 	private void buyCard(Card card) {
 		Card bCard = gameDeck.buyCard(card);
 		discardPile.addCard(bCard);
-		
+		availableTreasure -= card.getCost();
+		availableBuys -=1;
+		System.out.println("bought Card: " + card.getName().toString() + ", remaining treasure: " + availableTreasure);
+
 	}
 	
 	public List<Action> play(Stage stage, boolean firstTime){

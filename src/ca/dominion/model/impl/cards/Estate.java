@@ -12,7 +12,8 @@ import ca.dominion.model.Stage;
 public class Estate implements Card{
 
 	private CardName name;
-	
+	private int value = 0;
+
 	public Estate (CardName name) {
 		this.name = name;
 	}
@@ -45,5 +46,10 @@ public class Estate implements Card{
 	
 	public boolean isPlayable(Hand hand){
 		return true;
+	}
+
+	@Override
+	public int getValue() {
+		return value;
 	}
 }

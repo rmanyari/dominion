@@ -14,9 +14,9 @@ import ca.dominion.model.impl.IncrementActionsAction;
 
 public class Village implements Card{
 
-	
 	private CardName name;
-	
+	private int value = 0;
+
 	public Village(CardName name) {
 		this.name = name;
 	}
@@ -51,5 +51,10 @@ public class Village implements Card{
 
 	public boolean isPlayable(Hand hand){
 		return true;
+	}
+
+	@Override
+	public int getValue() {
+		return value;
 	}
 }

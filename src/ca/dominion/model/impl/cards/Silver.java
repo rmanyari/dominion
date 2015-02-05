@@ -14,7 +14,8 @@ import ca.dominion.model.impl.IncrementTreasureAction;
 public class Silver implements Card{
 
 	private CardName name;
-	
+	private int value = 2;
+
 	public Silver(CardName name) {
 		this.name = name;
 	}
@@ -48,5 +49,10 @@ public class Silver implements Card{
 
 	public boolean isPlayable(Hand hand){
 		return true;
+	}
+
+	@Override
+	public int getValue() {
+		return value;
 	}
 }
