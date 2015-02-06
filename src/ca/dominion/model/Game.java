@@ -26,21 +26,17 @@ public class Game{
 		Player p = players.get(players.size() % turn);
 		boolean isDoneActionStage = false;
 		boolean isDoneBuyStage = false;
-		boolean firstActionStage = true;
-		boolean firstBuyStage = true;
 		
 		while(!isDoneActionStage){
 			System.out.println("Playing action");
-			List<Action> actions = p.play(Stage.ACTION, firstActionStage);
+			List<Action> actions = p.play(Stage.ACTION);
 			actionOnOtherPlayers(p.getId(), actions);
-			firstActionStage = false;
 			isDoneActionStage = p.isDoneWithStage(Stage.ACTION);
 		}
 		
 		while(!isDoneBuyStage){
 			System.out.println("Playing buy");
-			p.play(Stage.BUY, firstBuyStage);
-			firstBuyStage = false;
+			p.play(Stage.BUY);
 			isDoneBuyStage = p.isDoneWithStage(Stage.BUY);
 		}
 		

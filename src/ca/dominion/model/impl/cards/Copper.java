@@ -1,6 +1,5 @@
 package ca.dominion.model.impl.cards;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ca.dominion.model.Action;

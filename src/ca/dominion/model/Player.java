@@ -162,11 +162,7 @@ public class Player{
 
 	}
 	
-	public List<Action> play(Stage stage, boolean firstTime){
-		if(firstTime){
-			availableActions = 1;
-			availableBuys = 1;
-		}
+	public List<Action> play(Stage stage){
 		
 		if(stage == Stage.ACTION && availableActions > 0){
 			playActionPhase();
@@ -187,10 +183,20 @@ public class Player{
 	 */
 	public boolean isDoneWithStage(Stage stage){
 		if(stage == Stage.ACTION){
-			return availableActions <= 0;
+			if(availableActions <= 0){
+				availableActions = 1;
+				return true;
+			}else{
+				return false;
+			}
 		}
 		if(stage == Stage.BUY){
-			return availableBuys <= 0;
+			if(availableBuys <= 0){
+				availableBuys = 1;
+				return true;
+			}else{
+				return false;
+			}
 		}
 		return true;
 	}
