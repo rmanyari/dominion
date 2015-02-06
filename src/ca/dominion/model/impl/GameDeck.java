@@ -49,4 +49,13 @@ public class GameDeck {
 	public List<Card> getAvailableCards() {
 		return cardsInDeck;
 	}
+	
+	public boolean aPileIsEmpty(){
+		for (Pile pile : cardsPiles) {
+			if(pile.getSize() == 0){
+				return true;
+			}
+		}
+		return false;
+	}
 }

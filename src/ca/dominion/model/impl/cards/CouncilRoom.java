@@ -53,13 +53,9 @@ public class CouncilRoom implements Card {
 	public boolean isPlayable(Hand hand){
 		return true;
 	}
-<<<<<<< HEAD
-	
-=======
 
 	@Override
 	public int getValue() {
 		return value;
 	}
->>>>>>> 6f317d593f4b2e7f104f30e710a87a1ebbd8f878
 }

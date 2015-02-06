@@ -17,7 +17,12 @@ public class Game{
 		this.deck = deck;
 	}
 		
-	public void playTurn(){
+	/**
+	 * 
+	 * @return A string containing the ID of the winner player
+	 * if the game is over. Null otherwise
+	 */
+	public String playTurn(){
 		Player p = players.get(players.size() % turn);
 		boolean isDoneActionStage = false;
 		boolean isDoneBuyStage = false;
@@ -39,8 +44,21 @@ public class Game{
 			isDoneBuyStage = p.isDoneWithStage(Stage.BUY);
 		}
 		
+		if(deck.aPileIsEmpty()){
+			Player winner = null;
+			int score = 0;
+			for (Player player : players) {
+				if(p.getVictoryPoints() > score){
+					winner = player;
+					score = p.getVictoryPoints();
+				}
+			}
+			return winner.getId();
+		}
+		
 		turn++;
 		
+		return null;
 	}
 	
 	private void actionOnOtherPlayers(String uuid, List<Action> actions){
